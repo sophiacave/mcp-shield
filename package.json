@@ -1,0 +1,27 @@
+{
+  "name": "mcp-shield",
+  "version": "0.1.0",
+  "description": "Security scanner for MCP servers. Detects SSRF, path traversal, injection vulnerabilities. Snyk for MCP.",
+  "author": "Like One <hello@likeone.ai>",
+  "license": "MIT",
+  "homepage": "https://github.com/sophiacave/mcp-shield#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sophiacave/mcp-shield.git"
+  },
+  "keywords": [
+    "mcp",
+    "security",
+    "scanner",
+    "ssrf",
+    "path-traversal",
+    "vulnerability",
+    "model-context-protocol",
+    "claude-code",
+    "devsecops"
+  ],
+  "bin": {
+    "mcp-shield": "./bin/mcp-shield.sh"
+  },
+  "files": ["bin/", "src/", "rules/", "README.md", "LICENSE"]
+}
