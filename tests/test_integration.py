@@ -52,6 +52,36 @@ def fetch_data(arguments):
     ssrf = [f for f in findings if f.rule_id.startswith("SSRF")]
     test("No SSRF on fully literal URL", len(ssrf) == 0)
 
+    # Validation-aware: SSRF-01 downgrades to SSRF-02 when urlparse/allowlist exists
+    code = '''
+from urllib.parse import urlparse
+ALLOWED_HOSTS = {"localhost", "127.0.0.1"}
+
+def validate_local_url(url):
+    parsed = urlparse(url)
+    if parsed.hostname not in ALLOWED_HOSTS:
+        raise ValueError("bad host")
+
+def fetch_data(arguments):
+    url = config["api_url"]
+    resp = requests.get(url)
+    return resp.text
+'''
+    findings = _scan_code(code)
+    ssrf = [f for f in findings if f.rule_id.startswith("SSRF")]
+    test("SSRF downgraded to SSRF-02 when validation exists", all(f.rule_id == "SSRF-02" for f in ssrf) and len(ssrf) > 0)
+
+    # No validation: SSRF-01 stays critical
+    code = '''
+def fetch_data(arguments):
+    url = arguments["url"]
+    resp = requests.post(url, json={"data": "test"})
+    return resp.text
+'''
+    findings = _scan_code(code)
+    ssrf01 = [f for f in findings if f.rule_id == "SSRF-01"]
+    test("SSRF-01 stays critical without validation", len(ssrf01) > 0)
+
 
 def test_path_traversal():
     """Path traversal rules fire correctly."""

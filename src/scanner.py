@@ -93,6 +93,9 @@ def _check_ssrf(code: str, lines: list[str], filepath: str) -> list[Finding]:
         (r'http\.request\s*\(\s*[^"\'`]', "http.request"),
     ]
 
+    validation_keywords = ["urlparse", "allowed_hosts", "allowlist", "whitelist",
+                           "validate_url", "validate_local", "localhost", "127.0.0.1"]
+
     for i, line in enumerate(lines, 1):
         stripped = line.strip()
         if stripped.startswith("#") or stripped.startswith("//"):
@@ -101,7 +104,10 @@ def _check_ssrf(code: str, lines: list[str], filepath: str) -> list[Finding]:
             if re.search(pattern, line):
                 # Check if URL comes from params/arguments/input
                 context = "\n".join(lines[max(0, i-5):min(len(lines), i+3)])
-                if any(kw in context.lower() for kw in ["arguments", "params", "input", "args", "request", "body"]):
+                has_user_input = any(kw in context.lower() for kw in ["arguments", "params", "input", "args", "request", "body"])
+                # Check if URL validation exists nearby or in the file
+                has_validation = any(kw in code.lower() for kw in validation_keywords)
+                if has_user_input and not has_validation:
                     findings.append(Finding(
                         rule_id="SSRF-01",
                         severity="critical",
@@ -109,6 +115,16 @@ def _check_ssrf(code: str, lines: list[str], filepath: str) -> list[Finding]:
                         message=f"{lib} call with dynamic URL that may include user input",
                         file=filepath, line=i,
                         suggestion="Validate URL against an allowlist of permitted hosts/schemes. Block internal IPs (127.0.0.1, 169.254.x.x, 10.x.x.x).",
+                        cwe="CWE-918"
+                    ))
+                elif has_user_input and has_validation:
+                    findings.append(Finding(
+                        rule_id="SSRF-02",
+                        severity="medium",
+                        title="Dynamic URL with validation detected",
+                        message=f"{lib} call with variable URL. URL validation exists but verify it covers all cases.",
+                        file=filepath, line=i,
+                        suggestion="Ensure validation blocks internal IPs (127.x, 10.x, 172.16-31.x, 169.254.x) and restricts schemes to https.",
                         cwe="CWE-918"
                     ))
                 else:
