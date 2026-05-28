@@ -1,8 +1,13 @@
-# mcp-shield
+# MCP Shield
 
-**Security scanner for MCP servers.** Detects SSRF, path traversal, injection, secrets, auth issues. Grades A-F.
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Tests: 26 passing](https://img.shields.io/badge/Tests-26%20passing-green.svg)](tests/)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-orange.svg)](https://modelcontextprotocol.io)
 
-36.7% of MCP servers are SSRF-vulnerable. 52% are dead. Only 17% are production-ready. This tool finds the vulnerabilities before attackers do.
+**Open-source security scanner for MCP servers.** 20 rules across 6 categories. Scan any server in seconds. Get a grade from A to F.
+
+> 36.7% of MCP servers are SSRF-vulnerable ([BlueRock, 2026](https://likeone.ai/blog/mcp-server-security-vulnerabilities-2026/)). 82% have path traversal flaws. Only 17% are production-ready. MCP Shield finds the vulnerabilities before attackers do.
 
 ## Quick Start
 
@@ -90,9 +95,21 @@ MCP Shield: my-server/ — 3 finding(s)
 Grade: F | 1 critical, 1 high, 1 medium
 ```
 
+## Features
+
+- **Zero dependencies** — Pure Python, no pip installs required
+- **20 security rules** across SSRF, path traversal, injection, auth, config, and logging
+- **CWE references** — Every finding maps to a Common Weakness Enumeration ID
+- **Actionable fixes** — Each finding includes specific remediation steps
+- **A-F grading** — Instant security posture assessment
+- **Dual mode** — Run as CLI or as an MCP server inside Claude Code
+- **Fast** — Scans a typical MCP server in under 1 second
+
 ## Why This Exists
 
-The MCP ecosystem is growing at 4,750% per year. Security tooling hasn't kept up. We built MCP Shield because every MCP server deployed without a security scan is a liability.
+The MCP ecosystem has 9,400+ servers and 97M monthly SDK downloads. Security tooling hasn't kept up. We built MCP Shield because every MCP server deployed without a security scan is a liability.
+
+Built by [Like One](https://likeone.ai), a 501(c)(3) nonprofit. Security tooling should be free.
 
 ## License
 
