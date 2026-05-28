@@ -17,21 +17,36 @@ python3 src/cli.py scan path/to/mcp_server.py
 python3 src/cli.py scan path/to/mcp-project/
 ```
 
-## What It Checks
+## What It Checks (20 Rules)
 
 | Rule | Severity | What It Detects |
 |------|----------|----------------|
 | SSRF-01 | Critical | User input in HTTP request URLs |
 | SSRF-02 | Medium | Dynamic URLs without validation |
+| SSRF-03 | Medium | DNS rebinding (URL validated but no IP pinning) |
 | PATH-01 | High | User input in file paths |
 | PATH-02 | Medium | No path traversal protection |
+| PATH-03 | Medium | Symlink following without check |
 | INJ-01 | Critical | eval/exec on user input |
 | INJ-02 | Critical | SQL string interpolation |
 | INJ-03 | High | subprocess with shell=True |
+| INJ-04 | High | Template injection via .format() |
+| INJ-05 | Critical | Unsafe deserialization (pickle/yaml) |
 | AUTH-01 | Medium | No auth on tool handlers |
-| AUTH-02 | Critical | Hardcoded secrets/API keys |
+| AUTH-02 | Critical | Hardcoded secrets/API keys (OpenAI, Stripe, GitHub, AWS) |
+| AUTH-03 | Low | No rate limiting on tool endpoints |
 | SEC-01 | High | SSL verification disabled |
 | SEC-02 | Medium | Wildcard CORS |
+| SEC-03 | Medium | Stack traces/error details exposed to client |
+| SEC-04 | Low | No input length validation (DoS risk) |
+| LOG-01 | Low | No logging/audit trail on tool invocations |
+
+## Testing
+
+```bash
+python3 tests/test_integration.py
+# 26 tests, 0 failures
+```
 
 ## MCP Server Integration
 
