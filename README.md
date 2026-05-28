@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![Tests: 26 passing](https://img.shields.io/badge/Tests-26%20passing-green.svg)](tests/)
+[![Tests: 28 passing](https://img.shields.io/badge/Tests-28%20passing-green.svg)](tests/)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-orange.svg)](https://modelcontextprotocol.io)
 
 **Open-source security scanner for MCP servers.** 20 rules across 6 categories. Scan any server in seconds. Get a grade from A to F.
@@ -50,7 +50,7 @@ python3 src/cli.py scan path/to/mcp-project/
 
 ```bash
 python3 tests/test_integration.py
-# 26 tests, 0 failures
+# 28 tests, 0 failures
 ```
 
 ## MCP Server Integration
