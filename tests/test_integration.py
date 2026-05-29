@@ -13,7 +13,7 @@ PASS = 0
 FAIL = 0
 
 
-def test(name, condition):
+def check(name, condition):
     global PASS, FAIL
     if condition:
         PASS += 1
@@ -44,13 +44,13 @@ def fetch_data(arguments):
 '''
     findings = _scan_code(code)
     ssrf = [f for f in findings if f.rule_id.startswith("SSRF")]
-    test("SSRF-01 fires on requests.get with user URL", any(f.rule_id == "SSRF-01" for f in ssrf))
+    check("SSRF-01 fires on requests.get with user URL", any(f.rule_id == "SSRF-01" for f in ssrf))
 
     # Static URL with literal string — no dynamic URL pattern
     code = 'resp = requests.get("https://api.example.com/data")\n'
     findings = _scan_code(code)
     ssrf = [f for f in findings if f.rule_id.startswith("SSRF")]
-    test("No SSRF on fully literal URL", len(ssrf) == 0)
+    check("No SSRF on fully literal URL", len(ssrf) == 0)
 
     # Validation-aware: SSRF-01 downgrades to SSRF-02 when urlparse/allowlist exists
     code = '''
@@ -69,7 +69,7 @@ def fetch_data(arguments):
 '''
     findings = _scan_code(code)
     ssrf = [f for f in findings if f.rule_id.startswith("SSRF")]
-    test("SSRF downgraded to SSRF-02 when validation exists", all(f.rule_id == "SSRF-02" for f in ssrf) and len(ssrf) > 0)
+    check("SSRF downgraded to SSRF-02 when validation exists", all(f.rule_id == "SSRF-02" for f in ssrf) and len(ssrf) > 0)
 
     # No validation: SSRF-01 stays critical
     code = '''
@@ -80,7 +80,7 @@ def fetch_data(arguments):
 '''
     findings = _scan_code(code)
     ssrf01 = [f for f in findings if f.rule_id == "SSRF-01"]
-    test("SSRF-01 stays critical without validation", len(ssrf01) > 0)
+    check("SSRF-01 stays critical without validation", len(ssrf01) > 0)
 
 
 def test_path_traversal():
@@ -95,7 +95,7 @@ def read_file(arguments):
 '''
     findings = _scan_code(code)
     path_findings = [f for f in findings if f.rule_id.startswith("PATH")]
-    test("PATH rules fire on open() with user path", len(path_findings) > 0)
+    check("PATH rules fire on open() with user path", len(path_findings) > 0)
 
 
 def test_injection():
@@ -106,31 +106,31 @@ def test_injection():
     code = 'result = eval(user_input)\n'
     findings = _scan_code(code)
     inj01 = [f for f in findings if f.rule_id == "INJ-01"]
-    test("INJ-01 fires on eval()", len(inj01) > 0)
+    check("INJ-01 fires on eval()", len(inj01) > 0)
 
     # INJ-02: SQL injection
     code = 'db.execute(f"SELECT * FROM users WHERE id = {user_id}")\n'
     findings = _scan_code(code)
     inj02 = [f for f in findings if f.rule_id == "INJ-02"]
-    test("INJ-02 fires on SQL f-string", len(inj02) > 0)
+    check("INJ-02 fires on SQL f-string", len(inj02) > 0)
 
     # INJ-03: command injection
     code = 'subprocess.run(cmd, shell=True)\n'
     findings = _scan_code(code)
     inj03 = [f for f in findings if f.rule_id == "INJ-03"]
-    test("INJ-03 fires on subprocess shell=True", len(inj03) > 0)
+    check("INJ-03 fires on subprocess shell=True", len(inj03) > 0)
 
     # INJ-05: pickle
     code = 'data = pickle.loads(user_data)\n'
     findings = _scan_code(code)
     inj05 = [f for f in findings if f.rule_id == "INJ-05"]
-    test("INJ-05 fires on pickle.loads()", len(inj05) > 0)
+    check("INJ-05 fires on pickle.loads()", len(inj05) > 0)
 
     # INJ-05: yaml unsafe
     code = 'data = yaml.load(text)\n'
     findings = _scan_code(code)
     inj05 = [f for f in findings if f.rule_id == "INJ-05"]
-    test("INJ-05 fires on yaml.load without SafeLoader", len(inj05) > 0)
+    check("INJ-05 fires on yaml.load without SafeLoader", len(inj05) > 0)
 
 
 def test_secrets():
@@ -140,12 +140,12 @@ def test_secrets():
     code = 'api_key = "sk-abcdefghij1234567890abcdef"\n'
     findings = _scan_code(code)
     auth02 = [f for f in findings if f.rule_id == "AUTH-02"]
-    test("AUTH-02 fires on hardcoded API key", len(auth02) > 0)
+    check("AUTH-02 fires on hardcoded API key", len(auth02) > 0)
 
     code = 'AKIA1234567890ABCDEF\n'
     findings = _scan_code(code)
     aws = [f for f in findings if f.rule_id == "AUTH-02" and "AWS" in f.title]
-    test("AUTH-02 detects AWS access key", len(aws) > 0)
+    check("AUTH-02 detects AWS access key", len(aws) > 0)
 
 
 def test_ssl():
@@ -155,7 +155,7 @@ def test_ssl():
     code = 'requests.get(url, verify=False)\n'
     findings = _scan_code(code)
     sec01 = [f for f in findings if f.rule_id == "SEC-01"]
-    test("SEC-01 fires on verify=False", len(sec01) > 0)
+    check("SEC-01 fires on verify=False", len(sec01) > 0)
 
 
 def test_format_report():
@@ -167,12 +167,12 @@ def test_format_report():
         Finding("SEC-01", "high", "ssl", "ssl disabled", "test.py", 2),
     ]
     report = format_report(findings, "test.py")
-    test("Report contains finding count", "2 finding(s)" in report)
-    test("Report contains grade", "Grade:" in report)
-    test("Critical finding gives F grade", "Grade: F" in report)
+    check("Report contains finding count", "2 finding(s)" in report)
+    check("Report contains grade", "Grade:" in report)
+    check("Critical finding gives F grade", "Grade: F" in report)
 
     clean = format_report([], "clean.py")
-    test("Clean report says all clear", "All clear" in clean)
+    check("Clean report says all clear", "All clear" in clean)
 
 
 def test_directory_scan():
@@ -189,8 +189,8 @@ def test_directory_scan():
         clean.write_text('x = 1 + 2\n')
 
         findings = scan_directory(tmpdir)
-        test("Directory scan finds vuln in vuln.py", len(findings) > 0)
-        test("Finding references vuln.py", any("vuln.py" in f.file for f in findings))
+        check("Directory scan finds vuln in vuln.py", len(findings) > 0)
+        check("Finding references vuln.py", any("vuln.py" in f.file for f in findings))
 
 
 def test_mcp_protocol():
@@ -198,16 +198,16 @@ def test_mcp_protocol():
     print("\n--- MCP Protocol ---")
 
     resp = handle_request({"method": "initialize", "id": 1})
-    test("initialize returns serverInfo", "serverInfo" in resp)
-    test("server name is mcp-shield", resp["serverInfo"]["name"] == "mcp-shield")
+    check("initialize returns serverInfo", "serverInfo" in resp)
+    check("server name is mcp-shield", resp["serverInfo"]["name"] == "mcp-shield")
 
     resp = handle_request({"method": "tools/list", "id": 2})
     tools = resp["tools"]
     tool_names = [t["name"] for t in tools]
-    test("3 tools listed", len(tools) == 3)
-    test("shield_scan_file exists", "shield_scan_file" in tool_names)
-    test("shield_scan_directory exists", "shield_scan_directory" in tool_names)
-    test("shield_scan_code exists", "shield_scan_code" in tool_names)
+    check("3 tools listed", len(tools) == 3)
+    check("shield_scan_file exists", "shield_scan_file" in tool_names)
+    check("shield_scan_directory exists", "shield_scan_directory" in tool_names)
+    check("shield_scan_code exists", "shield_scan_code" in tool_names)
 
     # shield_scan_code
     resp = handle_request({
@@ -216,7 +216,7 @@ def test_mcp_protocol():
         "id": 3
     })
     text = resp["content"][0]["text"]
-    test("shield_scan_code returns findings", "INJ-01" in text or "eval" in text.lower())
+    check("shield_scan_code returns findings", "INJ-01" in text or "eval" in text.lower())
 
 
 def test_nonexistent_file():
@@ -224,8 +224,8 @@ def test_nonexistent_file():
     print("\n--- Edge Cases ---")
 
     findings = scan_file("/nonexistent/path/file.py")
-    test("Nonexistent file returns finding", len(findings) > 0)
-    test("Finding is info level", findings[0].severity == "info")
+    check("Nonexistent file returns finding", len(findings) > 0)
+    check("Finding is info level", findings[0].severity == "info")
 
 
 if __name__ == "__main__":

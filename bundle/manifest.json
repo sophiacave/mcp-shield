@@ -1,0 +1,82 @@
+{
+  "manifest_version": "0.3",
+  "name": "mcp-shield",
+  "version": "1.0.0",
+  "description": "Security scanner for MCP servers. Detects SSRF, injection, path traversal, credential exposure, and more across 20 rules.",
+  "display_name": "MCP Shield",
+  "author": {
+    "name": "Like One Foundation",
+    "url": "https://likeone.ai"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "src/mcp_server.py",
+    "mcp_config": {
+      "command": "python3",
+      "args": ["${__dirname}/src/mcp_server.py"]
+    }
+  },
+  "tools": [
+    {
+      "name": "shield_scan_file",
+      "description": "Scan a file for MCP security vulnerabilities. Returns findings with severity, CWE references, and fix suggestions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Absolute path to the file to scan"
+          }
+        },
+        "required": ["file_path"]
+      }
+    },
+    {
+      "name": "shield_scan_directory",
+      "description": "Scan an entire directory for MCP security vulnerabilities. Recursively checks all Python files.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "directory_path": {
+            "type": "string",
+            "description": "Absolute path to the directory to scan"
+          }
+        },
+        "required": ["directory_path"]
+      }
+    },
+    {
+      "name": "shield_scan_code",
+      "description": "Scan a code snippet for MCP security vulnerabilities. Pass code directly without needing a file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The source code to scan"
+          },
+          "language": {
+            "type": "string",
+            "description": "Programming language of the code",
+            "default": "python"
+          }
+        },
+        "required": ["code"]
+      }
+    }
+  ],
+  "tools_generated": false,
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "python": ">=3.9"
+    }
+  },
+  "keywords": ["security", "mcp", "scanner", "vulnerability", "ssrf", "injection", "code-analysis"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/likeone-ai/mcp-shield"
+  },
+  "homepage": "https://likeone.ai"
+}
