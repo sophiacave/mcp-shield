@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sophiacave/mcp-shield",
+  "title": "MCP Shield",
+  "description": "Open-source security scanner for MCP servers. 20 rules across 6 categories (SSRF, path traversal, injection, auth, secrets, sandbox escape). Scan any server in seconds. Grade A-F.",
+  "repository": {
+    "url": "https://github.com/sophiacave/mcp-shield",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "mcp-shield",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

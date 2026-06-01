@@ -1,5 +1,7 @@
 # MCP Shield
 
+<!-- mcp-name: io.github.sophiacave/mcp-shield -->
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Tests: 28 passing](https://img.shields.io/badge/Tests-28%20passing-green.svg)](tests/)
