@@ -1,5 +1,8 @@
 # MCP Shield
 
+[![CI](https://github.com/sophiacave/mcp-shield/actions/workflows/ci.yml/badge.svg)](https://github.com/sophiacave/mcp-shield/actions/workflows/ci.yml)
+
+
 <!-- mcp-name: io.github.sophiacave/mcp-shield -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
