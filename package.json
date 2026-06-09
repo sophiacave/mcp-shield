@@ -1,6 +1,6 @@
 {
   "name": "mcp-shield",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Security scanner for MCP servers. Detects SSRF, path traversal, injection vulnerabilities. Snyk for MCP.",
   "author": "Like One <hello@likeone.ai>",
   "license": "MIT",
