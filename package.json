@@ -1,6 +1,6 @@
 {
   "name": "@sophiacave/mcp-shield",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Security scanner for MCP servers. Detects SSRF, path traversal, injection vulnerabilities. Snyk for MCP.",
   "author": "Like One <hello@likeone.ai>",
   "license": "MIT",
@@ -29,5 +29,6 @@
     "rules/",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "mcpName": "io.github.sophiacave/mcp-shield"
 }
